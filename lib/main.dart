@@ -34,16 +34,14 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
-
-
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
   Color btnColor = Colors.greenAccent;
   Color appBarColor = Colors.lightBlueAccent;
+
   @override
   Widget build(BuildContext context) {
     //
@@ -54,40 +52,17 @@ class _MyHomePageState extends State<MyHomePage> {
       ),
       body: Center(
         child: Column(
-
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
                 onPressed: () {
-                    AlertDialog alert = AlertDialog(
-                    title: const Text("Ma premiere alerte"),
-                    content: const Text("J'ai créer ma premier alerte",),
-                    actions: [
-                      TextButton(
-                          onPressed: (){
-                            Navigator.of(context).pop();
-                          },
-                          child: const Text("OK")),
-                      TextButton(
-                          onPressed: () {
-                            Navigator.of(context).pop();
-                            setState(() {
-                                appBarColor = (appBarColor == Colors.lightBlueAccent)
-                                    ? Colors.lightGreenAccent
-                                    : Colors.lightBlueAccent;
-                            });
-                      },
-                          child: Text("Changer le App bar"),)
-                    ],
-                  );
-                  showDialog(
-                    barrierDismissible: false,
-                      context: context,
-                      builder: (BuildContext ctx) {
-                        return alert;
-                  });
+                  showMyDialog(alert: createAlert());
+
                 },
-                child: const Text("Montrer une alerte"))
+                child: const Text("Montrer une alerte")),
+                /* ElevatedButton(
+                    onPressed: onPressed,
+                    child: child) */
           ],
         ),
       ),
@@ -95,30 +70,30 @@ class _MyHomePageState extends State<MyHomePage> {
         backgroundColor: btnColor,
         onPressed: () {
           final snackbar = SnackBar(content: Text("Mon premier snack"));
-          ScaffoldMessenger.of(context).showSnackBar(createSnack(text: "Snack bar évoluée"));
+          ScaffoldMessenger.of(context)
+              .showSnackBar(createSnack(text: "Snack bar évoluée"));
         },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), //
     );
   }
-  
+
   SnackBar createSnack({required String text}) {
     final content = Row(
       mainAxisSize: MainAxisSize.max,
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        const Icon(Icons.house),
-        Text(text)
-      ],
+      children: [const Icon(Icons.house), Text(text)],
     );
     final snack = SnackBar(
       content: content,
       action: SnackBarAction(
         label: "Clique ici",
-        onPressed: (){
+        onPressed: () {
           setState(() {
-            btnColor = (btnColor == Colors.greenAccent) ? Colors.redAccent : Colors.greenAccent;
+            btnColor = (btnColor == Colors.greenAccent)
+                ? Colors.redAccent
+                : Colors.greenAccent;
           });
         },
         textColor: Colors.red,
@@ -129,5 +104,42 @@ class _MyHomePageState extends State<MyHomePage> {
       elevation: 8,
     );
     return snack;
+  }
+
+  AlertDialog createAlert() {
+    return AlertDialog(
+      title: const Text("Ma premiere alerte"),
+      content: const Text(
+        "J'ai créer ma premier alerte",
+      ),
+      actions: [
+        TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text("OK")),
+        TextButton(
+          onPressed: () {
+            Navigator.of(context).pop();
+            setState(() {
+              appBarColor =
+              (appBarColor == Colors.lightBlueAccent)
+                  ? Colors.lightGreenAccent
+                  : Colors.lightBlueAccent;
+            });
+          },
+          child: Text("Changer le App bar"),
+        )
+      ],
+    );
+  }
+
+  Future <void> showMyDialog({required AlertDialog alert}) async {
+    await showDialog(
+        barrierDismissible: false,
+        context: context,
+        builder: (BuildContext ctx) {
+          return alert;
+        });
   }
 }
