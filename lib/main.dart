@@ -43,13 +43,13 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   Color btnColor = Colors.greenAccent;
-
+  Color appBarColor = Colors.lightBlueAccent;
   @override
   Widget build(BuildContext context) {
     //
     return Scaffold(
       appBar: AppBar(
-
+        backgroundColor: appBarColor,
         title: Text(widget.title),
       ),
       body: Center(
@@ -57,9 +57,37 @@ class _MyHomePageState extends State<MyHomePage> {
 
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'Montrer un snackbar',
-            ),
+            ElevatedButton(
+                onPressed: () {
+                    AlertDialog alert = AlertDialog(
+                    title: const Text("Ma premiere alerte"),
+                    content: const Text("J'ai créer ma premier alerte",),
+                    actions: [
+                      TextButton(
+                          onPressed: (){
+                            Navigator.of(context).pop();
+                          },
+                          child: const Text("OK")),
+                      TextButton(
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                            setState(() {
+                                appBarColor = (appBarColor == Colors.lightBlueAccent)
+                                    ? Colors.lightGreenAccent
+                                    : Colors.lightBlueAccent;
+                            });
+                      },
+                          child: Text("Changer le App bar"),)
+                    ],
+                  );
+                  showDialog(
+                    barrierDismissible: false,
+                      context: context,
+                      builder: (BuildContext ctx) {
+                        return alert;
+                  });
+                },
+                child: const Text("Montrer une alerte"))
           ],
         ),
       ),
