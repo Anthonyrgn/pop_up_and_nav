@@ -34,19 +34,15 @@ class MyHomePage extends StatefulWidget {
 
   final String title;
 
+
+
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
 
-  void _incrementCounter() {
-    setState(() {
-
-      _counter++;
-    });
-  }
+  Color btnColor = Colors.greenAccent;
 
   @override
   Widget build(BuildContext context) {
@@ -62,20 +58,48 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
+              'Montrer un snackbar',
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        backgroundColor: btnColor,
+        onPressed: () {
+          final snackbar = SnackBar(content: Text("Mon premier snack"));
+          ScaffoldMessenger.of(context).showSnackBar(createSnack(text: "Snack bar évoluée"));
+        },
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), //
     );
+  }
+  
+  SnackBar createSnack({required String text}) {
+    final content = Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        const Icon(Icons.house),
+        Text(text)
+      ],
+    );
+    final snack = SnackBar(
+      content: content,
+      action: SnackBarAction(
+        label: "Clique ici",
+        onPressed: (){
+          setState(() {
+            btnColor = (btnColor == Colors.greenAccent) ? Colors.redAccent : Colors.greenAccent;
+          });
+        },
+        textColor: Colors.red,
+      ),
+      backgroundColor: Colors.greenAccent,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      behavior: SnackBarBehavior.floating,
+      elevation: 8,
+    );
+    return snack;
   }
 }
