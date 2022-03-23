@@ -11,6 +11,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
         // This is the theme of your application.
@@ -55,14 +56,14 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             ElevatedButton(
+              onPressed: (() => showMyDialog(dialog: createAlert())),
+              child: const Text("Montrer une alerte"),
+            ),
+            ElevatedButton(
                 onPressed: () {
-                  showMyDialog(alert: createAlert());
-
+                   showMyDialog(dialog: createSimple());
                 },
-                child: const Text("Montrer une alerte")),
-                /* ElevatedButton(
-                    onPressed: onPressed,
-                    child: child) */
+                child: const Text("Montrer simple")),
           ],
         ),
       ),
@@ -106,6 +107,31 @@ class _MyHomePageState extends State<MyHomePage> {
     return snack;
   }
 
+  SimpleDialog createSimple() {
+    final simple = SimpleDialog(
+      titlePadding: EdgeInsets.fromLTRB(15, 15, 15, 15),
+        backgroundColor: Colors.red,
+        title: Text("My simple dialog"),
+        children: [
+          const Icon(Icons.house),
+          const Text("Le contenu de mon dialog"),
+          const Divider(),
+          const Text("Pop up"),
+          option(),
+        ],
+    );
+    return simple;
+  }
+
+  SimpleDialogOption option(){
+    return SimpleDialogOption(
+      onPressed: (){
+        Navigator.of(context).pop();
+      },
+      child: const Text("OK"),
+    );
+  }
+
   AlertDialog createAlert() {
     return AlertDialog(
       title: const Text("Ma premiere alerte"),
@@ -134,12 +160,12 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Future <void> showMyDialog({required AlertDialog alert}) async {
+  Future<void> showMyDialog({required Widget dialog}) async {
     await showDialog(
         barrierDismissible: false,
         context: context,
         builder: (BuildContext ctx) {
-          return alert;
+          return dialog;
         });
   }
 }
